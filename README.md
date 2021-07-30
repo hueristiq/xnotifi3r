@@ -66,9 +66,20 @@ To display help message for sigurls use the `-h` flag:
 signotifi3r -h
 ```
 
-| Flag | Description               | Example                                 |
-| :--- | :------------------------- | :-------------------------------------- |
-| -l   | send message line-by-line | `cat urls.txt \| signotifi3r -l`           |
+```
+     _                   _   _  __ _ _____      
+ ___(_) __ _ _ __   ___ | |_(_)/ _(_)___ / _ __ 
+/ __| |/ _` | '_ \ / _ \| __| | |_| | |_ \| '__|
+\__ \ | (_| | | | | (_) | |_| |  _| |___) | |   
+|___/_|\__, |_| |_|\___/ \__|_|_| |_|____/|_| v1.0.0
+       |___/
+
+USAGE:
+  signotifi3r [OPTIONS]
+
+OPTIONS:
+  -l        send message line by line (default: false)
+```
 
 ## Contribution
 
