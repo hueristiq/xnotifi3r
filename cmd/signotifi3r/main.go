@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/logrusorgru/aurora/v3"
+	"github.com/signedsecurity/signotifi3r/internal/configuration"
 	"github.com/signedsecurity/signotifi3r/pkg/notifier"
 )
 
@@ -17,7 +18,7 @@ type options struct {
 
 var (
 	co options
-	so notifier.Options
+	so configuration.Options
 )
 
 func banner() {
@@ -50,12 +51,11 @@ func init() {
 }
 
 func main() {
-	options, err := notifier.ParseOptions(&so)
-	if err != nil {
+	if err := so.Parse(); err != nil {
 		log.Fatalln(err)
 	}
 
-	notifier, err := notifier.New(options)
+	notifier, err := notifier.New(&so)
 	if err != nil {
 		log.Fatalln(err)
 	}

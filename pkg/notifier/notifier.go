@@ -1,19 +1,20 @@
 package notifier
 
 import (
+	"github.com/signedsecurity/signotifi3r/internal/configuration"
 	"github.com/signedsecurity/signotifi3r/pkg/ansi"
 	"github.com/valyala/fasthttp"
 )
 
 // Notify handles the notification engine
 type Notify struct {
-	options *Options
+	options *configuration.Options
 	client  *fasthttp.Client
 	slack   *Slack
 }
 
 // New notify instance
-func New(options *Options) (*Notify, error) {
+func New(options *configuration.Options) (*Notify, error) {
 	client := &fasthttp.Client{}
 	return &Notify{
 		options: options,
