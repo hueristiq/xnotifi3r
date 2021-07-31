@@ -11,7 +11,7 @@ type Configuration struct {
 	Version   string `yaml:"version"`
 	Platforms struct {
 		Slack struct {
-			Use        bool   `yaml:"use"`
+			Enabled    bool   `yaml:"enabled"`
 			WebHookURL string `yaml:"webhook_url"`
 		} `yaml:"slack"`
 	} `yaml:"platforms"`

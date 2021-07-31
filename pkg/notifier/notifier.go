@@ -29,7 +29,7 @@ func New(options *Options) (*Notify, error) {
 func (n *Notify) SendNotification(message string) error {
 	message = ansi.Strip(message)
 
-	if n.options.YAMLConfig.Platforms.Slack.Use {
+	if n.options.YAMLConfig.Platforms.Slack.Enabled {
 		err := n.slack.send(message)
 		if err != nil {
 			return err
