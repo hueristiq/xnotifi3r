@@ -1,4 +1,4 @@
-package notifier
+package signotifi3r
 
 import (
 	"github.com/signedsecurity/signotifi3r/internal/configuration"

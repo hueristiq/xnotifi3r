@@ -9,7 +9,7 @@ import (
 
 	"github.com/logrusorgru/aurora/v3"
 	"github.com/signedsecurity/signotifi3r/internal/configuration"
-	"github.com/signedsecurity/signotifi3r/pkg/notifier"
+	"github.com/signedsecurity/signotifi3r/pkg/signotifi3r"
 )
 
 type options struct {
@@ -55,7 +55,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	notifier, err := notifier.New(&so)
+	signotifi3r, err := signotifi3r.New(&so)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -70,7 +70,7 @@ func main() {
 		message = line
 
 		if co.oneline {
-			notifier.SendNotification(message)
+			signotifi3r.SendNotification(message)
 		} else {
 			lines += line
 			lines += "\n"
@@ -80,6 +80,6 @@ func main() {
 	if !co.oneline {
 		message = lines
 
-		notifier.SendNotification(message)
+		signotifi3r.SendNotification(message)
 	}
 }
