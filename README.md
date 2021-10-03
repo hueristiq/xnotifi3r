@@ -41,11 +41,6 @@ signotifi3r -h
 
 ## Post Insall Setup 
 
-#### Slack
-
-* __step 1:__ [Get yours Slack incoming webhook URL](https://slack.com/intl/en-id/help/articles/115005265063-Incoming-webhooks-for-Slack)
-* __step 2:__ Add the webhook URL to the config file.
-
 #### Config File
 
 The default config file should be located in `$HOME/.config/signotifi3r/conf.yaml` and has the following contents:
