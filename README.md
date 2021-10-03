@@ -11,7 +11,6 @@ signotifi3r is a helper utility to send messages from CLI to Slack.
     * [From Source](#from-source)
     * [From Github](#from-github)
 * [Post Install Setup](#post-install-setup)
-    * [Slack](#slack)
     * [Config File](#config-file)
 * [Usage](#usage)
 
