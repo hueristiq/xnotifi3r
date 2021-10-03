@@ -57,7 +57,6 @@ platforms:
         token: "xoxb-123456789012-1234567890123-4mt0t4l1YL3g1T5L4cK70k3N"
         botname: "signotifi3r"
         channel: "C001CH4NN3L"
-        format: "{{data}}"
 ```
 
 ## Usage
