@@ -1,24 +1,20 @@
 package main
 
 import (
-	"bufio"
 	"flag"
 	"fmt"
 	"log"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/logrusorgru/aurora/v3"
 	"github.com/signedsecurity/signotifi3r/internal/configuration"
-	"github.com/signedsecurity/signotifi3r/pkg/signotifi3r"
+	"github.com/signedsecurity/signotifi3r/internal/runner"
 )
 
-type options struct {
-	oneline bool
-}
-
 var (
-	co options
-	so configuration.Options
+	options configuration.Options
 )
 
 func banner() {
@@ -33,7 +29,8 @@ func banner() {
 }
 
 func init() {
-	flag.BoolVar(&co.oneline, "l", false, "")
+	flag.StringVar(&options.Data, "d", "", "")
+	flag.StringVar(&options.Data, "data", "", "")
 
 	flag.Usage = func() {
 		banner()
@@ -42,7 +39,7 @@ func init() {
 		h += "  signotifi3r [OPTIONS]\n"
 
 		h += "\nOPTIONS:\n"
-		h += "  -l        send message line by line (default: false)\n"
+		h += "  -d, --data        file path to read data from\n"
 
 		fmt.Fprint(os.Stderr, h)
 	}
@@ -51,35 +48,28 @@ func init() {
 }
 
 func main() {
-	if err := so.Parse(); err != nil {
+	if err := options.Parse(); err != nil {
 		log.Fatalln(err)
 	}
 
-	signotifi3r, err := signotifi3r.New(&so)
+	r, err := runner.New(&options)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	var lines string
-	var message string
+	// Setup close handler
+	go func() {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+		go func() {
+			<-c
+			log.Println("\r- Ctrl+C pressed in Terminal")
+			r.Close()
+			os.Exit(0)
+		}()
+	}()
 
-	scanner := bufio.NewScanner(os.Stdin)
-
-	for scanner.Scan() {
-		line := scanner.Text()
-		message = line
-
-		if co.oneline {
-			signotifi3r.SendNotification(message)
-		} else {
-			lines += line
-			lines += "\n"
-		}
-	}
-
-	if !co.oneline {
-		message = lines
-
-		signotifi3r.SendNotification(message)
+	if err = r.Run(); err != nil {
+		log.Fatalln(err)
 	}
 }

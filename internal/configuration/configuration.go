@@ -8,26 +8,24 @@ import (
 )
 
 type Slack struct {
-	Enabled    bool   `yaml:"enabled"`
-	WebHookURL string `yaml:"webhook_url"`
+	Token   string `yaml:"token"`
+	Botname string `yaml:"botname"`
+	Channel string `yaml:"channel"`
 }
 
 type Platforms struct {
-	Slack Slack `yaml:"slack"`
+	Slack *Slack `yaml:"slack"`
 }
 
 type Configuration struct {
-	Version   string    `yaml:"version"`
-	Platforms Platforms `yaml:"platforms"`
+	Version   string     `yaml:"version"`
+	Platforms *Platforms `yaml:"platforms"`
 }
 
 type Options struct {
-	ExcludeSources  string
-	UseSources      string
-	SlackWebHookURL string
-	Text            string
+	Data string
 
-	YAMLConfig Configuration
+	YAMLConfig *Configuration
 }
 
 const VERSION = "1.0.0"
@@ -41,12 +39,13 @@ func (options *Options) Parse() (err error) {
 	confPath := dir + "/.config/signotifi3r/conf.yaml"
 
 	if _, err := os.Stat(confPath); os.IsNotExist(err) {
-		configuration := Configuration{
+		configuration := &Configuration{
 			Version: VERSION,
-			Platforms: Platforms{
-				Slack: Slack{
-					Enabled:    true,
-					WebHookURL: "",
+			Platforms: &Platforms{
+				Slack: &Slack{
+					Token:   "",
+					Botname: "",
+					Channel: "",
 				},
 			},
 		}
@@ -96,32 +95,31 @@ func makeDirectory(directory string) error {
 }
 
 // MarshalWrite writes the marshaled yaml config to disk
-func (c *Configuration) MarshalWrite(file string) error {
+func (c *Configuration) MarshalWrite(file string) (err error) {
 	f, err := os.OpenFile(file, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
-		return err
+		return
 	}
 
-	// Indent the spaces too
+	defer f.Close()
+
 	enc := yaml.NewEncoder(f)
 	enc.SetIndent(4)
 	err = enc.Encode(&c)
-	f.Close()
-	return err
+
+	return
 }
 
 // UnmarshalRead reads the unmarshalled config yaml file from disk
-func UnmarshalRead(file string) (Configuration, error) {
-	config := Configuration{}
-
+func UnmarshalRead(file string) (configuration *Configuration, err error) {
 	f, err := os.Open(file)
 	if err != nil {
-		return config, err
+		return
 	}
 
-	err = yaml.NewDecoder(f).Decode(&config)
+	defer f.Close()
 
-	f.Close()
+	err = yaml.NewDecoder(f).Decode(&configuration)
 
-	return config, err
+	return
 }

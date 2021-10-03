@@ -2,7 +2,7 @@
 
 ![made with go](https://img.shields.io/badge/made%20with-Go-0040ff.svg) ![maintenance](https://img.shields.io/badge/maintained%3F-yes-0040ff.svg) [![open issues](https://img.shields.io/github/issues-raw/signedsecurity/signotifi3r.svg?style=flat&color=0040ff)](https://github.com/signedsecurity/signotifi3r/issues?q=is:issue+is:open) [![closed issues](https://img.shields.io/github/issues-closed-raw/signedsecurity/signotifi3r.svg?style=flat&color=0040ff)](https://github.com/signedsecurity/signotifi3r/issues?q=is:issue+is:closed) [![license](https://img.shields.io/badge/License-MIT-gray.svg?colorB=0040FF)](https://github.com/signedsecurity/signotifi3r/blob/master/LICENSE) [![twitter](https://img.shields.io/badge/twitter-@signedsecurity-0040ff.svg)](https://twitter.com/signedsecurity)
 
-signotifi3r is a CLI helper utility to send notification via webhooks to Slack.
+signotifi3r is a helper utility to send messages from CLI to Slack.
 
 ## Resources
 
@@ -54,8 +54,10 @@ The default config file should be located in `$HOME/.config/signotifi3r/conf.yam
 version: 1.0.0
 platforms:
     slack:
-        use: true
-        webhook_url: "https://hooks.slack.com/services/xxxxxxxxxxx/xxxxxxxxxxx/xxxxxxxxxxx"
+        token: "xoxb-123456789012-1234567890123-4mt0t4l1YL3g1T5L4cK70k3N"
+        botname: "signotifi3r"
+        channel: "C001CH4NN3L"
+        format: "{{data}}"
 ```
 
 ## Usage
@@ -78,7 +80,7 @@ USAGE:
   signotifi3r [OPTIONS]
 
 OPTIONS:
-  -l        send message line by line (default: false)
+  -d, --data        file path to read data from
 ```
 
 ## Contribution
