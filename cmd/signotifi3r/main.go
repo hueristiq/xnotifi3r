@@ -8,7 +8,6 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/logrusorgru/aurora/v3"
 	"github.com/signedsecurity/signotifi3r/internal/configuration"
 	"github.com/signedsecurity/signotifi3r/internal/runner"
 )
@@ -17,29 +16,22 @@ var (
 	options configuration.Options
 )
 
-func banner() {
-	fmt.Fprintln(os.Stderr, aurora.BrightBlue(`
-     _                   _   _  __ _ _____      
- ___(_) __ _ _ __   ___ | |_(_)/ _(_)___ / _ __ 
-/ __| |/ _`+"`"+` | '_ \ / _ \| __| | |_| | |_ \| '__|
-\__ \ | (_| | | | | (_) | |_| |  _| |___) | |   
-|___/_|\__, |_| |_|\___/ \__|_|_| |_|____/|_| v1.0.0
-       |___/
-`).Bold())
-}
-
 func init() {
 	flag.StringVar(&options.Data, "d", "", "")
 	flag.StringVar(&options.Data, "data", "", "")
 
+	flag.StringVar(&options.Platform, "p", "", "")
+	flag.StringVar(&options.Platform, "platform", "", "")
+
 	flag.Usage = func() {
-		banner()
+		fmt.Fprint(os.Stderr, configuration.BANNER)
 
 		h := "USAGE:\n"
 		h += "  signotifi3r [OPTIONS]\n"
 
 		h += "\nOPTIONS:\n"
-		h += "  -d, --data        file path to read data from\n"
+		h += "  -d, --data            file path to read data from\n"
+		h += "  -p, --platform        platform to send notification to\n"
 
 		fmt.Fprint(os.Stderr, h)
 	}
@@ -57,7 +49,6 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	// Setup close handler
 	go func() {
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, os.Interrupt, syscall.SIGTERM)

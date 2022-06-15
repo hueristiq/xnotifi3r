@@ -8,27 +8,25 @@ import (
 )
 
 type Platform struct {
-	conf *configuration.Slack
+	*configuration.Slack
 }
 
 func New(conf *configuration.Slack) (platform *Platform, err error) {
-	platform = &Platform{
-		conf: conf,
-	}
+	platform = &Platform{conf}
 
 	return
 }
 
-func (p *Platform) Send(message string) (err error) {
+func (platform *Platform) Send(message string) (err error) {
 	url := &url.URL{
 		Scheme: "slack",
-		Path:   p.conf.Token + "@" + p.conf.Channel,
+		Path:   platform.Token + "@" + platform.ChannelID,
 	}
 
 	q := url.Query()
 
-	if p.conf.Botname != "" {
-		q.Set("botname", p.conf.Botname)
+	if platform.Botname != "" {
+		q.Set("botname", platform.Botname)
 	}
 
 	url.RawQuery = q.Encode()

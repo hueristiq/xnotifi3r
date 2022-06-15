@@ -21,7 +21,7 @@ func New(options *configuration.Options) (runner *Runner, err error) {
 	// Discard all internal logs
 	shoutrrr.SetLogger(log.New(ioutil.Discard, "", 0))
 
-	prClient, err := platforms.New(options.YAMLConfig, options)
+	prClient, err := platforms.New(&options.YAMLConfig, options)
 	if err != nil {
 		return nil, err
 	}

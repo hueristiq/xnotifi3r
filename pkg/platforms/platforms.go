@@ -2,7 +2,7 @@ package platforms
 
 import (
 	"github.com/signedsecurity/signotifi3r/internal/configuration"
-	"github.com/signedsecurity/signotifi3r/pkg/ansi"
+	"github.com/signedsecurity/signotifi3r/pkg/utils"
 	"github.com/signedsecurity/signotifi3r/pkg/platforms/slack"
 )
 
@@ -27,8 +27,8 @@ func New(conf *configuration.Configuration, opts *configuration.Options) (client
 		conf: conf,
 	}
 
-	if conf.Platforms.Slack != nil {
-		platform, err = slack.New(conf.Platforms.Slack)
+	if conf.PlatformsConfigurations.Slack != nil && (len(conf.Platforms) == 0 || utils.Contains(conf.Platforms, "slack")) {
+		platform, err = slack.New(conf.PlatformsConfigurations.Slack)
 		if err != nil {
 			return
 		}
@@ -40,7 +40,7 @@ func New(conf *configuration.Configuration, opts *configuration.Options) (client
 }
 
 func (p *Client) Send(message string) (err error) {
-	message = ansi.Strip(message)
+	message = utils.StripANSI(message)
 
 	for _, platform := range p.platforms {
 		if err = platform.Send(message); err != nil {

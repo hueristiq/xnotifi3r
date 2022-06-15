@@ -2,7 +2,10 @@ package configuration
 
 import (
 	"os"
+	"log"
 	"path"
+	"path/filepath"
+	"github.com/logrusorgru/aurora/v3"
 
 	"gopkg.in/yaml.v3"
 )
@@ -10,59 +13,91 @@ import (
 type Slack struct {
 	Token   string `yaml:"token"`
 	Botname string `yaml:"botname"`
-	Channel string `yaml:"channel"`
+	ChannelID string `yaml:"channel_id"`
 }
 
-type Platforms struct {
+type PlatformsConfigurations struct {
 	Slack *Slack `yaml:"slack"`
 }
 
 type Configuration struct {
+	Platforms []string `yaml:"platforms"`
+	PlatformsConfigurations *PlatformsConfigurations `yaml:"platforms_confiurations"`
 	Version   string     `yaml:"version"`
-	Platforms *Platforms `yaml:"platforms"`
 }
 
 type Options struct {
 	Data string
+	Platform string
 
-	YAMLConfig *Configuration
+	YAMLConfig Configuration
 }
 
-const VERSION = "1.0.0"
+const (
+	VERSION    string = "1.0.0"
+	FILESDIR   string = "signotifi3r"
+)
+
+var (
+	BANNER string = aurora.Sprintf(
+		aurora.BrightBlue(`
+     _                   _   _  __ _ _____      
+ ___(_) __ _ _ __   ___ | |_(_)/ _(_)___ / _ __ 
+/ __| |/ _`+"`"+` | '_ \ / _ \| __| | |_| | |_ \| '__|
+\__ \ | (_| | | | | (_) | |_| |  _| |___) | |   
+|___/_|\__, |_| |_|\___/ \__|_|_| |_|____/|_| %s
+       |___/
+
+`).Bold(),
+		aurora.BrightRed("v"+VERSION).Bold(),
+	)
+	FILES string = func(folder string) string {
+		dotConfig, err := os.UserConfigDir()
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		return filepath.Join(dotConfig, folder)
+	}(FILESDIR)
+)
 
 func (options *Options) Parse() (err error) {
-	dir, err := os.UserHomeDir()
+	configuration := Configuration{}
+	confYAMLFile := filepath.Join(FILES, "conf.yaml")
+
+	_, err = os.Stat(confYAMLFile)
 	if err != nil {
-		return
-	}
+		if os.IsNotExist(err) {
+			err = nil
 
-	confPath := dir + "/.config/signotifi3r/conf.yaml"
-
-	if _, err := os.Stat(confPath); os.IsNotExist(err) {
-		configuration := &Configuration{
-			Version: VERSION,
-			Platforms: &Platforms{
-				Slack: &Slack{
-					Token:   "",
-					Botname: "",
-					Channel: "",
+			configuration = Configuration{
+				Platforms: []string{"slack"},
+				PlatformsConfigurations: &PlatformsConfigurations{
+					Slack: &Slack{
+						Token:   "",
+						Botname: "",
+						ChannelID: "",
+					},
 				},
-			},
+				Version: VERSION,
+			}
+
+			directory, _ := path.Split(confYAMLFile)
+
+			if err := makeDirectory(directory); err != nil {
+				return err
+			}
+
+			if err = configuration.MarshalWrite(confYAMLFile); err != nil {
+				return err
+			}
+
+			options.YAMLConfig = configuration
+		} else {
+			return
 		}
-
-		directory, _ := path.Split(confPath)
-
-		if err := makeDirectory(directory); err != nil {
-			return err
-		}
-
-		if err = configuration.MarshalWrite(confPath); err != nil {
-			return err
-		}
-
-		options.YAMLConfig = configuration
 	} else {
-		configuration, err := UnmarshalRead(confPath)
+		configuration, err := UnmarshalRead(confYAMLFile)
 		if err != nil {
 			return err
 		}
@@ -70,7 +105,7 @@ func (options *Options) Parse() (err error) {
 		if configuration.Version != VERSION {
 			configuration.Version = VERSION
 
-			if err := configuration.MarshalWrite(confPath); err != nil {
+			if err := configuration.MarshalWrite(confYAMLFile); err != nil {
 				return err
 			}
 		}
@@ -111,7 +146,7 @@ func (c *Configuration) MarshalWrite(file string) (err error) {
 }
 
 // UnmarshalRead reads the unmarshalled config yaml file from disk
-func UnmarshalRead(file string) (configuration *Configuration, err error) {
+func UnmarshalRead(file string) (configuration Configuration, err error) {
 	f, err := os.Open(file)
 	if err != nil {
 		return

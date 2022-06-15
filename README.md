@@ -25,7 +25,7 @@ You can download the pre-built binary for your platform from this repository's [
 signotifi3r requires **go1.14+** to install successfully. Run the following command to get the repo
 
 ```bash
-GO111MODULE=on go get github.com/signedsecurity/signotifi3r/cmd/signotifi3r
+go install github.com/signedsecurity/signotifi3r/cmd/signotifi3r@latest
 ```
 
 #### From Github

@@ -1,4 +1,4 @@
-package ansi
+package utils
 
 import "regexp"
 
@@ -6,6 +6,18 @@ const ansi = "[\u001B\u009B][[\\]()#;?]*(?:(?:(?:[a-zA-Z\\d]*(?:;[a-zA-Z\\d]*)*)
 
 var re = regexp.MustCompile(ansi)
 
-func Strip(str string) string {
+func StripANSI(str string) string {
 	return re.ReplaceAllString(str, "")
+}
+
+func Contains(slice []string, item string) bool {
+	set := make(map[string]struct{}, len(slice))
+
+	for _, s := range slice {
+		set[s] = struct{}{}
+	}
+
+	_, ok := set[item]
+
+	return ok
 }
