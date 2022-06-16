@@ -5,34 +5,43 @@ import (
 
 	"github.com/containrrr/shoutrrr"
 	"github.com/signedsecurity/signotifi3r/internal/configuration"
+	"github.com/signedsecurity/signotifi3r/pkg/utils"
 )
 
 type Platform struct {
-	*configuration.Slack
+	Confs []*configuration.SlackConfiguration
 }
 
-func New(conf *configuration.Slack) (platform *Platform, err error) {
-	platform = &Platform{conf}
+func New(conf []*configuration.SlackConfiguration, toIDS []string) (platform *Platform, err error) {
+	platform = &Platform{}
+
+	for _, o := range conf {
+		if len(toIDS) == 0 || utils.Contains(toIDS, o.ID) {
+			platform.Confs = append(platform.Confs, o)
+		}
+	}
 
 	return
 }
 
 func (platform *Platform) Send(message string) (err error) {
-	url := &url.URL{
-		Scheme: "slack",
-		Path:   platform.Token + "@" + platform.ChannelID,
-	}
+	for _, pr := range platform.Confs {
+		url := &url.URL{
+			Scheme: "slack",
+			Path:   pr.SlackToken + "@" + pr.SlackChannelID,
+		}
 
-	q := url.Query()
+		q := url.Query()
 
-	if platform.Botname != "" {
-		q.Set("botname", platform.Botname)
-	}
+		if pr.SlackBotname != "" {
+			q.Set("botname", pr.SlackBotname)
+		}
 
-	url.RawQuery = q.Encode()
+		url.RawQuery = q.Encode()
 
-	if err = shoutrrr.Send(url.String(), message); err != nil {
-		return
+		if err = shoutrrr.Send(url.String(), message); err != nil {
+			continue
+		}
 	}
 
 	return

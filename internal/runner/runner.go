@@ -35,7 +35,6 @@ func (r *Runner) Run() (err error) {
 	switch {
 	case hasStdin():
 		inFile = os.Stdin
-
 	case r.options.Data != "":
 		inFile, err = os.Open(r.options.Data)
 		if err != nil {
@@ -51,7 +50,6 @@ func (r *Runner) Run() (err error) {
 		msg := scanner.Text()
 
 		r.sendMessage(msg)
-
 	}
 
 	return

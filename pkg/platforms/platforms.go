@@ -1,9 +1,11 @@
 package platforms
 
 import (
+	"strings"
+
 	"github.com/signedsecurity/signotifi3r/internal/configuration"
-	"github.com/signedsecurity/signotifi3r/pkg/utils"
 	"github.com/signedsecurity/signotifi3r/pkg/platforms/slack"
+	"github.com/signedsecurity/signotifi3r/pkg/utils"
 )
 
 type Platform interface {
@@ -11,7 +13,7 @@ type Platform interface {
 }
 
 type PlatformOptions struct {
-	Slack *configuration.Slack
+	Slack *configuration.SlackConfiguration
 }
 
 type Client struct {
@@ -27,8 +29,24 @@ func New(conf *configuration.Configuration, opts *configuration.Options) (client
 		conf: conf,
 	}
 
-	if conf.PlatformsConfigurations.Slack != nil && (len(conf.Platforms) == 0 || utils.Contains(conf.Platforms, "slack")) {
-		platform, err = slack.New(conf.PlatformsConfigurations.Slack)
+	toUse := []string{}
+
+	if strings.Contains(opts.Platform, ",") {
+		toUse = append(toUse, strings.Split(opts.Platform, ",")...)
+	} else if opts.Platform != "" {
+		toUse = append(toUse, opts.Platform)
+	}
+
+	toIDS := []string{}
+
+	if strings.Contains(opts.ID, ",") {
+		toIDS = append(toIDS, strings.Split(opts.ID, ",")...)
+	} else if opts.ID != "" {
+		toIDS = append(toIDS, opts.ID)
+	}
+
+	if conf.PlatformsConfigurations.Slack != nil && (len(toUse) == 0 || utils.Contains(toUse, "slack")) {
+		platform, err = slack.New(conf.PlatformsConfigurations.Slack, toIDS)
 		if err != nil {
 			return
 		}

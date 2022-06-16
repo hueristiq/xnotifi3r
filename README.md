@@ -7,11 +7,11 @@ signotifi3r is a helper utility to send messages from CLI to Slack.
 ## Resources
 
 * [Installation](#installation)
-    * [From Binary](#from-binary)
-    * [From Source](#from-source)
-    * [From Github](#from-github)
+	* [From Binary](#from-binary)
+	* [From Source](#from-source)
+	* [From Github](#from-github)
 * [Post Install Setup](#post-install-setup)
-    * [Config File](#config-file)
+	* [Config File](#config-file)
 * [Usage](#usage)
 
 ## Installation
@@ -22,7 +22,7 @@ You can download the pre-built binary for your platform from this repository's [
 
 #### From Source
 
-signotifi3r requires **go1.14+** to install successfully. Run the following command to get the repo
+signotifi3r requires **go1.17+** to install successfully. Run the following command to get the repo
 
 ```bash
 go install github.com/signedsecurity/signotifi3r/cmd/signotifi3r@latest
@@ -48,9 +48,16 @@ The default config file should be located in `$HOME/.config/signotifi3r/conf.yam
 version: 1.0.0
 platforms:
     slack:
-        token: "xoxb-123456789012-1234567890123-4mt0t4l1YL3g1T5L4cK70k3N"
-        botname: "signotifi3r"
-        channel: "C001CH4NN3L"
+        -
+            id: "slack"
+            slack_token: "xoxb-123456789012-1234567890123-4mt0t4l1YL3g1T5L4cK70k3N"
+            slack_botname: "signotifi3r"
+            slack_channel_id: "C039ZSYCYKT"
+        -
+            id: "targets"
+            slack_token: "xoxb-123456789012-1234567890123-4mt0t4l1YL3g1T5L4cK70k3N"
+            slack_botname: "signotifi3r"
+            slack_channel_id: "C03L9RQRK4P"
 ```
 
 ## Usage
@@ -73,7 +80,9 @@ USAGE:
   signotifi3r [OPTIONS]
 
 OPTIONS:
-  -d, --data        file path to read data from
+  -d, --data            file path to read data from
+  -p, --platform        platform to send notification to
+  -i, --id              id to send the notification to
 ```
 
 ## Contribution

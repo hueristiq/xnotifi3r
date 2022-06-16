@@ -23,6 +23,9 @@ func init() {
 	flag.StringVar(&options.Platform, "p", "", "")
 	flag.StringVar(&options.Platform, "platform", "", "")
 
+	flag.StringVar(&options.ID, "i", "", "")
+	flag.StringVar(&options.ID, "id", "", "")
+
 	flag.Usage = func() {
 		fmt.Fprint(os.Stderr, configuration.BANNER)
 
@@ -32,6 +35,7 @@ func init() {
 		h += "\nOPTIONS:\n"
 		h += "  -d, --data            file path to read data from\n"
 		h += "  -p, --platform        platform to send notification to\n"
+		h += "  -i, --id              id to send the notification to\n"
 
 		fmt.Fprint(os.Stderr, h)
 	}

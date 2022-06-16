@@ -1,41 +1,43 @@
 package configuration
 
 import (
-	"os"
 	"log"
+	"os"
 	"path"
 	"path/filepath"
+
 	"github.com/logrusorgru/aurora/v3"
 
 	"gopkg.in/yaml.v3"
 )
 
-type Slack struct {
-	Token   string `yaml:"token"`
-	Botname string `yaml:"botname"`
-	ChannelID string `yaml:"channel_id"`
+type SlackConfiguration struct {
+	ID             string `yaml:"id"`
+	SlackToken     string `yaml:"slack_token"`
+	SlackBotname   string `yaml:"slack_botname"`
+	SlackChannelID string `yaml:"slack_channel_id"`
 }
 
 type PlatformsConfigurations struct {
-	Slack *Slack `yaml:"slack"`
+	Slack []*SlackConfiguration `yaml:"slack"`
 }
 
 type Configuration struct {
-	Platforms []string `yaml:"platforms"`
-	PlatformsConfigurations *PlatformsConfigurations `yaml:"platforms_confiurations"`
-	Version   string     `yaml:"version"`
+	Version                 string                   `yaml:"version"`
+	PlatformsConfigurations *PlatformsConfigurations `yaml:"platforms"`
 }
 
 type Options struct {
-	Data string
+	ID       string
+	Data     string
 	Platform string
 
 	YAMLConfig Configuration
 }
 
 const (
-	VERSION    string = "1.0.0"
-	FILESDIR   string = "signotifi3r"
+	VERSION  string = "1.0.0"
+	FILESDIR string = "signotifi3r"
 )
 
 var (
@@ -71,12 +73,14 @@ func (options *Options) Parse() (err error) {
 			err = nil
 
 			configuration = Configuration{
-				Platforms: []string{"slack"},
 				PlatformsConfigurations: &PlatformsConfigurations{
-					Slack: &Slack{
-						Token:   "",
-						Botname: "",
-						ChannelID: "",
+					Slack: []*SlackConfiguration{
+						{
+							ID:             "slack",
+							SlackToken:     "",
+							SlackBotname:   "",
+							SlackChannelID: "",
+						},
 					},
 				},
 				Version: VERSION,
