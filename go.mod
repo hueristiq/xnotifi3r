@@ -1,4 +1,4 @@
-module github.com/signedsecurity/signotifi3r
+module github.com/hueristiq/hqnotifi3r
 
 go 1.18
 

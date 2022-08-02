@@ -1,7 +1,7 @@
 builds:
     -
-        binary: signotifi3r
-        main: cmd/signotifi3r/main.go
+        binary: hqnotifi3r
+        main: cmd/hqnotifi3r/main.go
         goos:
             - linux
             - windows

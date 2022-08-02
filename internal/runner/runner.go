@@ -8,8 +8,8 @@ import (
 	"os"
 
 	"github.com/containrrr/shoutrrr"
-	"github.com/signedsecurity/signotifi3r/internal/configuration"
-	"github.com/signedsecurity/signotifi3r/pkg/platforms"
+	"github.com/hueristiq/hqnotifi3r/internal/configuration"
+	"github.com/hueristiq/hqnotifi3r/pkg/platforms"
 )
 
 type Runner struct {
@@ -41,7 +41,7 @@ func (r *Runner) Run() (err error) {
 			return
 		}
 	default:
-		return errors.New("signotifi3r works with stdin or file using '-d' flag")
+		return errors.New("hqnotifi3r works with stdin or file using '-d' flag")
 	}
 
 	scanner := bufio.NewScanner(inFile)

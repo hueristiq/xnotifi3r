@@ -3,9 +3,9 @@ package platforms
 import (
 	"strings"
 
-	"github.com/signedsecurity/signotifi3r/internal/configuration"
-	"github.com/signedsecurity/signotifi3r/pkg/platforms/slack"
-	"github.com/signedsecurity/signotifi3r/pkg/utils"
+	"github.com/hueristiq/hqnotifi3r/internal/configuration"
+	"github.com/hueristiq/hqnotifi3r/pkg/platforms/slack"
+	"github.com/hueristiq/hqnotifi3r/pkg/utils"
 )
 
 type Platform interface {

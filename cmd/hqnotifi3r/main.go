@@ -8,8 +8,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/signedsecurity/signotifi3r/internal/configuration"
-	"github.com/signedsecurity/signotifi3r/internal/runner"
+	"github.com/hueristiq/hqnotifi3r/internal/configuration"
+	"github.com/hueristiq/hqnotifi3r/internal/runner"
 )
 
 var (
@@ -30,12 +30,13 @@ func init() {
 		fmt.Fprint(os.Stderr, configuration.BANNER)
 
 		h := "USAGE:\n"
-		h += "  signotifi3r [OPTIONS]\n"
+		h += "  hqnotifi3r [OPTIONS]\n"
 
 		h += "\nOPTIONS:\n"
 		h += "  -d, --data            file path to read data from\n"
 		h += "  -p, --platform        platform to send notification to\n"
 		h += "  -i, --id              id to send the notification to\n"
+		h += "\n"
 
 		fmt.Fprint(os.Stderr, h)
 	}

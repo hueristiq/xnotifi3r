@@ -1,4 +1,4 @@
-name: build
+name: build 🔨
 
 on:
     push:
@@ -21,4 +21,4 @@ jobs:
             -
                 name: Build
                 run: go build -v .
-                working-directory: cmd/signotifi3r/
+                working-directory: cmd/hqnotifi3r/

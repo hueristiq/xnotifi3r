@@ -1,9 +1,9 @@
-name: 🎉 release
+name: release 🎉
 
 on:
     create:
         tags:
-            - v*
+            - v*.*.*
     workflow_dispatch:
 
 jobs:
