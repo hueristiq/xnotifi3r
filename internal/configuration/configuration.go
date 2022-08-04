@@ -36,7 +36,7 @@ type Options struct {
 }
 
 const (
-	VERSION  string = "1.0.0"
+	VERSION  string = "1.1.0"
 	FILESDIR string = "hqnotifi3r"
 )
 
